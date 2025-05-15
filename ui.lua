@@ -1,4 +1,4 @@
--- [Hadeh Hub v2 Final dengan Playtime Timer - Fix Version]
+-- [Hadeh Hub v2 Final dengan Playtime Timer]
 
 local npcList = { "Gwa Gwa", "Mina", "Kvjesm", "Midori", "Koin", "Henben", "Aqua", "DarkLuna", "Binjun" }
 
@@ -6,9 +6,9 @@ local itemList = { "Gwa Gwa", "Doge", "Lunaris", "Maxwell" }
 
 local player = game.Players.LocalPlayer local char = player.Character or player.CharacterAdded:Wait() local hrp = char:WaitForChild("HumanoidRootPart") local ReplicatedStorage = game:GetService("ReplicatedStorage") local rollRemote = ReplicatedStorage:FindFirstChild("Roll") or ReplicatedStorage:FindFirstChild("RollRemote")
 
--- UI local gui = Instance.new("ScreenGui", game.CoreGui) gui.Name = "HadehHub"
+-- UI local gui = Instance.new("ScreenGui") gui.Name = "HadehHub" gui.ResetOnSpawn = false pcall(function() gui.Parent = gethui and gethui() or game:GetService("CoreGui") end)
 
-local main = Instance.new("Frame", gui) main.Size = UDim2.new(0, 250, 0, 330) main.Position = UDim2.new(0, 20, 0.3, 0) main.BackgroundColor3 = Color3.fromRGB(30, 30, 30) main.BorderSizePixel = 0
+local main = Instance.new("Frame", gui) main.Size = UDim2.new(0, 250, 0, 300) main.Position = UDim2.new(0, 20, 0.3, 0) main.BackgroundColor3 = Color3.fromRGB(30, 30, 30) main.BorderSizePixel = 0
 
 local title = Instance.new("TextLabel", main) title.Size = UDim2.new(1, 0, 0, 30) title.Text = "Hadeh Hub" title.TextColor3 = Color3.new(1, 1, 1) title.BackgroundColor3 = Color3.fromRGB(50, 50, 50) title.Font = Enum.Font.GothamBold title.TextScaled = true
 
@@ -32,11 +32,11 @@ drop.MouseButton1Click:Connect(function() dropFrame.Visible = not dropFrame.Visi
 
 teleportBtn.MouseButton1Click:Connect(function() if selectedNPC then for _, obj in pairs(workspace:GetChildren()) do if obj.Name == selectedNPC and obj:IsA("Model") then local root = obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart") if root then hrp.CFrame = root.CFrame + Vector3.new(0, 5, 0) break end end end end end)
 
--- Tombol Quick Roll local rollBtn = Instance.new("TextButton", main) rollBtn.Size = UDim2.new(1, -20, 0, 30) rollBtn.Position = UDim2.new(0, 10, 0, 120) rollBtn.Text = "Quick Roll" rollBtn.TextColor3 = Color3.new(1, 1, 1) rollBtn.BackgroundColor3 = Color3.fromRGB(100, 50, 50) rollBtn.Font = Enum.Font.Gotham rollBtn.TextScaled = true
+-- Tombol Quick Roll local rollBtn = Instance.new("TextButton", main) rollBtn.Size = UDim2.new(1, -20, 0, 30) rollBtn.Position = UDim2.new(0, 10, 0, 130) rollBtn.Text = "Quick Roll" rollBtn.TextColor3 = Color3.new(1, 1, 1) rollBtn.BackgroundColor3 = Color3.fromRGB(100, 50, 50) rollBtn.Font = Enum.Font.Gotham rollBtn.TextScaled = true
 
 rollBtn.MouseButton1Click:Connect(function() if rollRemote and rollRemote:IsA("RemoteEvent") then rollRemote:FireServer() else warn("Remote Roll tidak ditemukan.") end end)
 
--- Tombol Merchant Kvjesm local merchantBtn = Instance.new("TextButton", main) merchantBtn.Size = UDim2.new(1, -20, 0, 30) merchantBtn.Position = UDim2.new(0, 10, 0, 160) merchantBtn.Text = "Teleport to Merchant (Kvjesm)" merchantBtn.TextColor3 = Color3.new(1, 1, 1) merchantBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 110) merchantBtn.Font = Enum.Font.Gotham merchantBtn.TextScaled = true
+-- Tombol Merchant Kvjesm local merchantBtn = Instance.new("TextButton", main) merchantBtn.Size = UDim2.new(1, -20, 0, 30) merchantBtn.Position = UDim2.new(0, 10, 0, 180) merchantBtn.Text = "Teleport to Merchant (Kvjesm)" merchantBtn.TextColor3 = Color3.new(1, 1, 1) merchantBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 110) merchantBtn.Font = Enum.Font.Gotham merchantBtn.TextScaled = true
 
 local function notify(text) local notif = Instance.new("TextLabel", gui) notif.Size = UDim2.new(0, 300, 0, 40) notif.Position = UDim2.new(0.5, -150, 0.2, 0) notif.BackgroundColor3 = Color3.fromRGB(40, 40, 40) notif.BorderSizePixel = 0 notif.TextColor3 = Color3.new(1, 1, 1) notif.Font = Enum.Font.GothamBold notif.TextScaled = true notif.Text = text notif.AnchorPoint = Vector2.new(0.5, 0)
 
@@ -54,11 +54,9 @@ end
 
 end)
 
--- AUTO COLLECT ITEM spawn(function() while wait(2) do pcall(function() for _, item in pairs(workspace:GetChildren()) do if table.find(itemList, item.Name) and item:IsA("Model") then local part = item:FindFirstChild("MainPart") or item:FindFirstChildWhichIsA("BasePart") if part and part:FindFirstChildOfClass("ProximityPrompt") then hrp.CFrame = part.CFrame + Vector3.new(0, 5, 0) if fireproximityprompt then fireproximityprompt(part:FindFirstChildOfClass("ProximityPrompt")) end wait(1) end end end end) end end)
+-- AUTO COLLECT ITEM spawn(function() while wait(2) do pcall(function() for _, item in pairs(workspace:GetChildren()) do if table.find(itemList, item.Name) and item:IsA("Model") then local part = item:FindFirstChild("MainPart") or item:FindFirstChildWhichIsA("BasePart") if part and part:FindFirstChildOfClass("ProximityPrompt") then hrp.CFrame = part.CFrame + Vector3.new(0, 5, 0) fireproximityprompt(part:FindFirstChildOfClass("ProximityPrompt")) wait(1) end end end end) end end)
 
 -- PLAYTIME TIMER local timerLabel = Instance.new("TextLabel", gui) timerLabel.Size = UDim2.new(0, 140, 0, 30) timerLabel.Position = UDim2.new(0.5, -70, 0, 10) timerLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30) timerLabel.TextColor3 = Color3.new(1, 1, 1) timerLabel.Font = Enum.Font.Gotham timerLabel.TextScaled = true timerLabel.Text = "Waktu: 00:00" timerLabel.BorderSizePixel = 0
 
-local seconds = 0
-
-spawn(function() while true do wait(1) seconds = seconds + 1 local minutes = math.floor(seconds / 60) local sec = seconds % 60 timerLabel.Text = string.format("Waktu: %02d:%02d", minutes, sec) end end)
+local seconds = 0 spawn(function() while true do wait(1) seconds += 1 local minutes = math.floor(seconds / 60) local sec = seconds % 60 timerLabel.Text = string.format("Waktu: %02d:%02d", minutes, sec) end end)
 
