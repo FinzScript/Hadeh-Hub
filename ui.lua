@@ -193,6 +193,43 @@ createTabButton(utilPage, "Print Loaded Tabs", 100, function()
     end
 end)
 
+createTabButton(utilPage, "Server Hop", 145, function()
+	local HttpService = game:GetService("HttpService")
+	local TeleportService = game:GetService("TeleportService")
+	local PlaceId = game.PlaceId
+	local JobId = game.JobId
+
+	local servers = {}
+	local success, response = pcall(function()
+		return HttpService:JSONDecode(game:HttpGet(
+			"https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Desc&limit=100"))
+	end)
+
+	if success and response and response.data then
+		for _, server in ipairs(response.data) do
+			if server.id ~= JobId and server.playing < server.maxPlayers then
+				TeleportService:TeleportToPlaceInstance(PlaceId, server.id)
+				break
+			end
+		end
+	else
+		warn("Failed to fetch server list")
+	end
+end)
+
+createTabButton(utilPage, "Remove Loading Screen", 190, function()
+	for _, v in pairs(CoreGui:GetDescendants()) do
+		if v:IsA("TextLabel") and string.lower(v.Text):find("loading") then
+			v:Destroy()
+		end
+	end
+	for _, v in pairs(CoreGui:GetDescendants()) do
+		if v:IsA("Frame") and v.Name:lower():find("loading") then
+			v:Destroy()
+		end
+	end
+end)
+
 -- Footer Credit
 local credit = Instance.new("TextLabel", MainFrame)
 credit.Size = UDim2.new(1, 0, 0, 25)
