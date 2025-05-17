@@ -1,214 +1,204 @@
--- Hadeh Hub v2 - Final Version dengan Loading Screen & Timer
-if game.CoreGui:FindFirstChild("HadehHub") then
-    game.CoreGui:FindFirstChild("HadehHub"):Destroy()
+-- Fikri Cihuy Hub - Roblox Script GUI for Hade's RNG
+-- Created by LUA Programming GOD
+
+-- Initialization
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Clean up old GUI if exists
+if CoreGui:FindFirstChild("FikriCihuyHub") then
+    CoreGui.FikriCihuyHub:Destroy()
 end
 
-local player = game.Players.LocalPlayer
-local char = player.Character or player.CharacterAdded:Wait()
-local hrp = char:WaitForChild("HumanoidRootPart")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local rollRemote = ReplicatedStorage:FindFirstChild("Roll") or ReplicatedStorage:FindFirstChild("RollRemote")
+local ScreenGui = Instance.new("ScreenGui", CoreGui)
+ScreenGui.Name = "FikriCihuyHub"
+ScreenGui.ResetOnSpawn = false
 
-local npcList = { "Gwa Gwa", "Mina", "Kvjesm", "Midori", "Koin", "Henben", "Aqua", "DarkLuna", "Binjun" }
-local itemList = { "Gwa Gwa", "Doge", "Lunaris", "Maxwell" }
+local MainFrame = Instance.new("Frame", ScreenGui)
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 500, 0, 600)
+MainFrame.Position = UDim2.new(0.25, 0, 0.15, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Active = true
+MainFrame.Draggable = true
 
--- GUI Init
-local gui = Instance.new("ScreenGui")
-gui.Name = "HadehHub"
-gui.ResetOnSpawn = false
-gui.Parent = game:GetService("CoreGui")
+local UICorner = Instance.new("UICorner", MainFrame)
+UICorner.CornerRadius = UDim.new(0, 10)
 
--- Loading Screen
-local loadingFrame = Instance.new("Frame", gui)
-loadingFrame.Size = UDim2.new(1, 0, 1, 0)
-loadingFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-local loadingText = Instance.new("TextLabel", loadingFrame)
-loadingText.Size = UDim2.new(0, 300, 0, 50)
-loadingText.Position = UDim2.new(0.5, -150, 0.5, -25)
-loadingText.Text = "Memuat Hadeh Hub..."
-loadingText.TextScaled = true
-loadingText.TextColor3 = Color3.new(1, 1, 1)
-loadingText.BackgroundTransparency = 1
-loadingText.Font = Enum.Font.GothamBold
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Text = "Fikri Cihuy Hub | Hade's RNG"
+Title.BackgroundTransparency = 1
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = Enum.Font.SourceSansBold
+Title.TextScaled = true
 
-wait(1.5)
-loadingFrame:Destroy()
+local Tabs = Instance.new("Frame", MainFrame)
+Tabs.Name = "Tabs"
+Tabs.Size = UDim2.new(0, 120, 1, -40)
+Tabs.Position = UDim2.new(0, 0, 0, 40)
+Tabs.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Instance.new("UICorner", Tabs).CornerRadius = UDim.new(0, 6)
 
--- Main Frame
-local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 260, 0, 330)
-main.Position = UDim2.new(0, 20, 0.3, 0)
-main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-main.BorderSizePixel = 0
+local Pages = Instance.new("Frame", MainFrame)
+Pages.Name = "Pages"
+Pages.Position = UDim2.new(0, 120, 0, 40)
+Pages.Size = UDim2.new(1, -120, 1, -40)
+Pages.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Instance.new("UICorner", Pages).CornerRadius = UDim.new(0, 6)
 
-local title = Instance.new("TextLabel", main)
-title.Size = UDim2.new(1, 0, 0, 30)
-title.Text = "Hadeh Hub"
-title.TextColor3 = Color3.new(1, 1, 1)
-title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-title.Font = Enum.Font.GothamBold
-title.TextScaled = true
+local tabNames = {"Tools", "ESP", "Teleport", "Utility"}
+local tabFrames = {}
 
--- NPC Dropdown
-local drop = Instance.new("TextButton", main)
-drop.Size = UDim2.new(1, -20, 0, 30)
-drop.Position = UDim2.new(0, 10, 0, 40)
-drop.Text = "Pilih NPC"
-drop.TextColor3 = Color3.new(1,1,1)
-drop.Font = Enum.Font.Gotham
-drop.TextScaled = true
-drop.BackgroundColor3 = Color3.fromRGB(60,60,60)
+for i, name in ipairs(tabNames) do
+    local btn = Instance.new("TextButton", Tabs)
+    btn.Size = UDim2.new(1, -10, 0, 35)
+    btn.Position = UDim2.new(0, 5, 0, (i - 1) * 40 + 5)
+    btn.Text = name
+    btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextScaled = true
+    btn.Name = name .. "Tab"
 
-local dropFrame = Instance.new("Frame", drop)
-dropFrame.Position = UDim2.new(0, 0, 1, 0)
-dropFrame.Size = UDim2.new(1, 0, 0, #npcList * 25)
-dropFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-dropFrame.Visible = false
-dropFrame.ClipsDescendants = true
+    local tabFrame = Instance.new("Frame", Pages)
+    tabFrame.Name = name .. "Page"
+    tabFrame.Size = UDim2.new(1, 0, 1, 0)
+    tabFrame.Visible = i == 1
+    tabFrame.BackgroundTransparency = 1
+    tabFrames[name] = tabFrame
 
-local selectedNPC = nil
-for i, npc in ipairs(npcList) do
-    local opt = Instance.new("TextButton", dropFrame)
-    opt.Size = UDim2.new(1, 0, 0, 25)
-    opt.Position = UDim2.new(0, 0, 0, (i - 1) * 25)
-    opt.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-    opt.Text = npc
-    opt.TextColor3 = Color3.new(1,1,1)
-    opt.Font = Enum.Font.Gotham
-    opt.TextScaled = true
-
-    opt.MouseButton1Click:Connect(function()
-        selectedNPC = npc
-        drop.Text = npc
-        dropFrame.Visible = false
+    btn.MouseButton1Click:Connect(function()
+        for _, frame in pairs(tabFrames) do frame.Visible = false end
+        tabFrame.Visible = true
     end)
 end
 
-drop.MouseButton1Click:Connect(function()
-    dropFrame.Visible = not dropFrame.Visible
-end)
-
--- Tombol Teleport
-local teleportBtn = Instance.new("TextButton", main)
-teleportBtn.Size = UDim2.new(1, -20, 0, 30)
-teleportBtn.Position = UDim2.new(0, 10, 0, 80)
-teleportBtn.Text = "Teleport"
-teleportBtn.TextColor3 = Color3.new(1, 1, 1)
-teleportBtn.BackgroundColor3 = Color3.fromRGB(50, 100, 50)
-teleportBtn.Font = Enum.Font.Gotham
-teleportBtn.TextScaled = true
-
-teleportBtn.MouseButton1Click:Connect(function()
-    if selectedNPC then
-        for _, obj in pairs(workspace:GetChildren()) do
-            if obj.Name == selectedNPC and obj:IsA("Model") then
-                local root = obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart")
-                if root then
-                    hrp.CFrame = root.CFrame + Vector3.new(0, 5, 0)
-                    break
-                end
-            end
-        end
-    end
-end)
-
--- Tombol Quick Roll
-local rollBtn = Instance.new("TextButton", main)
-rollBtn.Size = UDim2.new(1, -20, 0, 30)
-rollBtn.Position = UDim2.new(0, 10, 0, 130)
-rollBtn.Text = "Quick Roll"
-rollBtn.TextColor3 = Color3.new(1, 1, 1)
-rollBtn.BackgroundColor3 = Color3.fromRGB(100, 50, 50)
-rollBtn.Font = Enum.Font.Gotham
-rollBtn.TextScaled = true
-
-rollBtn.MouseButton1Click:Connect(function()
-    if rollRemote and rollRemote:IsA("RemoteEvent") then
-        rollRemote:FireServer()
-    else
-        warn("Remote Roll tidak ditemukan.")
-    end
-end)
-
--- Teleport Merchant (Kvjesm)
-local merchantBtn = Instance.new("TextButton", main)
-merchantBtn.Size = UDim2.new(1, -20, 0, 30)
-merchantBtn.Position = UDim2.new(0, 10, 0, 180)
-merchantBtn.Text = "Teleport to Merchant (Kvjesm)"
-merchantBtn.TextColor3 = Color3.new(1, 1, 1)
-merchantBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 110)
-merchantBtn.Font = Enum.Font.Gotham
-merchantBtn.TextScaled = true
-
-local function notify(text)
-    local notif = Instance.new("TextLabel", gui)
-    notif.Size = UDim2.new(0, 300, 0, 40)
-    notif.Position = UDim2.new(0.5, -150, 0.2, 0)
-    notif.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    notif.BorderSizePixel = 0
-    notif.TextColor3 = Color3.new(1, 1, 1)
-    notif.Font = Enum.Font.GothamBold
-    notif.TextScaled = true
-    notif.Text = text
-    notif.AnchorPoint = Vector2.new(0.5, 0)
-    game:GetService("TweenService"):Create(notif, TweenInfo.new(0.5), {BackgroundTransparency = 0.2}):Play()
-    wait(2)
-    notif:Destroy()
+local function createTabButton(parent, label, y, callback)
+    local button = Instance.new("TextButton", parent)
+    button.Size = UDim2.new(0, 300, 0, 35)
+    button.Position = UDim2.new(0, 10, 0, y)
+    button.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    button.TextColor3 = Color3.new(1, 1, 1)
+    button.Font = Enum.Font.SourceSans
+    button.Text = label
+    button.TextScaled = true
+    Instance.new("UICorner", button).CornerRadius = UDim.new(0, 4)
+    button.MouseButton1Click:Connect(callback)
 end
 
-merchantBtn.MouseButton1Click:Connect(function()
-    local foundKvjesm = false
-    for _, obj in pairs(workspace:GetChildren()) do
-        if obj.Name == "Kvjesm" and obj:IsA("Model") then
-            local root = obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart")
-            if root then
-                hrp.CFrame = root.CFrame + Vector3.new(0, 5, 0)
-                foundKvjesm = true
-                break
-            end
+-- Tools Tab Buttons
+local toolPage = tabFrames["Tools"]
+
+createTabButton(toolPage, "Quick Roll", 10, function()
+    for _, r in pairs(game:GetService("ReplicatedStorage"):GetDescendants()) do
+        if (r:IsA("RemoteEvent") or r:IsA("RemoteFunction")) and string.lower(r.Name):find("quick") then
+            pcall(function() r:FireServer() end)
+            break
         end
     end
-    if not foundKvjesm then
-        notify("Kvjesm tidak sedang spawn.")
+end)
+
+createTabButton(toolPage, "Anti-AFK", 55, function()
+    local vu = game:GetService("VirtualUser")
+    LocalPlayer.Idled:Connect(function()
+        vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+        task.wait(1)
+        vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    end)
+end)
+
+createTabButton(toolPage, "Auto Daily Quest", 100, function()
+    for _, r in pairs(game:GetService("ReplicatedStorage"):GetDescendants()) do
+        if r:IsA("RemoteEvent") and r.Name:lower():find("quest") then
+            pcall(function() r:FireServer() end)
+        end
     end
 end)
 
--- Auto Collect Item
-spawn(function()
-    while wait(2) do
-        pcall(function()
-            for _, item in pairs(workspace:GetChildren()) do
-                if table.find(itemList, item.Name) and item:IsA("Model") then
-                    local part = item:FindFirstChild("MainPart") or item:FindFirstChildWhichIsA("BasePart")
-                    if part and part:FindFirstChildOfClass("ProximityPrompt") then
-                        hrp.CFrame = part.CFrame + Vector3.new(0, 5, 0)
-                        fireproximityprompt(part:FindFirstChildOfClass("ProximityPrompt"))
-                        wait(1)
-                    end
-                end
-            end
-        end)
+-- ESP Tab
+local espPage = tabFrames["ESP"]
+
+local function makeESP(itemName, color)
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("Tool") and obj.Name == itemName and obj:FindFirstChild("Handle") then
+            local esp = Instance.new("BillboardGui", obj.Handle)
+            esp.Adornee = obj.Handle
+            esp.Size = UDim2.new(0, 100, 0, 40)
+            esp.AlwaysOnTop = true
+            esp.Name = "ESP_TAG"
+            local label = Instance.new("TextLabel", esp)
+            label.Size = UDim2.new(1, 0, 1, 0)
+            label.BackgroundTransparency = 1
+            label.Text = itemName:upper()
+            label.TextColor3 = color
+            label.Font = Enum.Font.Arial
+            label.TextScaled = true
+        end
+    end
+end
+
+createTabButton(espPage, "ESP Gwa Gwa", 10, function() makeESP("Gwa Gwa", Color3.new(1, 1, 0)) end)
+createTabButton(espPage, "ESP Maxwell", 55, function() makeESP("Maxwell", Color3.new(0, 1, 0)) end)
+createTabButton(espPage, "ESP Lunaris", 100, function() makeESP("Lunaris", Color3.new(0, 0.5, 1)) end)
+createTabButton(espPage, "ESP Doge", 145, function() makeESP("Doge", Color3.new(1, 0.5, 0)) end)
+createTabButton(espPage, "Remove All ESP", 190, function()
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v:IsA("BillboardGui") and v.Name == "ESP_TAG" then v:Destroy() end
     end
 end)
 
--- Timer (Playtime)
-local timerLabel = Instance.new("TextLabel", gui)
-timerLabel.Size = UDim2.new(0, 140, 0, 30)
-timerLabel.Position = UDim2.new(0.5, -70, 0, 10)
-timerLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-timerLabel.TextColor3 = Color3.new(1, 1, 1)
-timerLabel.Font = Enum.Font.Gotham
-timerLabel.TextScaled = true
-timerLabel.Text = "Waktu: 00:00"
-timerLabel.BorderSizePixel = 0
+-- Teleport Tab
+local tpPage = tabFrames["Teleport"]
 
-local seconds = 0
-spawn(function()
-    while true do
-        wait(1)
-        seconds += 1
-        local minutes = math.floor(seconds / 60)
-        local sec = seconds % 60
-        timerLabel.Text = string.format("Waktu: %02d:%02d", minutes, sec)
+createTabButton(tpPage, "Teleport to Kvjesm", 10, function()
+    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name == "Kvjesm" and obj:FindFirstChild("HumanoidRootPart") then
+            hrp.CFrame = obj.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
+            return
+        end
+    end
+    local msg = Instance.new("Message", workspace)
+    msg.Text = "Traveling Merchant has not spawned!"
+    task.wait(3)
+    msg:Destroy()
+end)
+
+createTabButton(tpPage, "Teleport to Gwa Gwa", 55, function()
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name == "Gwa Gwa" and obj:FindFirstChild("HumanoidRootPart") then
+            LocalPlayer.Character.HumanoidRootPart.CFrame = obj.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
+            break
+        end
     end
 end)
+
+-- Utility Tab
+local utilPage = tabFrames["Utility"]
+
+createTabButton(utilPage, "Toggle GUI", 10, function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
+
+createTabButton(utilPage, "Destroy GUI", 55, function()
+    ScreenGui:Destroy()
+end)
+
+createTabButton(utilPage, "Print Loaded Tabs", 100, function()
+    for name, _ in pairs(tabFrames) do
+        print("Tab: " .. name)
+    end
+end)
+
+-- Footer Credit
+local credit = Instance.new("TextLabel", MainFrame)
+credit.Size = UDim2.new(1, 0, 0, 25)
+credit.Position = UDim2.new(0, 0, 1, -25)
+credit.BackgroundTransparency = 1
+credit.Text = "Fikri Cihuy Hub | Scripted by LUA Programming GOD"
+credit.Font = Enum.Font.SourceSans
+credit.TextColor3 = Color3.fromRGB(255, 255, 255)
+credit.TextScaled = true
